@@ -1,0 +1,5 @@
+// Byte-exact packed resources. All rendering and decoding remain in sofa.js / sample-room.js.
+let manifestPromise;const shardCache=new Map();
+async function manifest(){if(!manifestPromise)manifestPromise=fetch('./asset-manifest.json').then(r=>{if(!r.ok)throw Error('空间资源目录加载失败');return r.json();}).catch(e=>{manifestPromise=null;throw e;});return manifestPromise;}
+async function shard(i,size){if(shardCache.has(i))return shardCache.get(i);const p=fetch(`./data-${String(i).padStart(2,'0')}.bin`).then(r=>{if(!r.ok)throw Error('空间资源分片加载失败');return r.arrayBuffer();}).then(b=>{if(b.byteLength!==size)throw Error('空间资源分片不完整');return b;});shardCache.set(i,p);while(shardCache.size>2)shardCache.delete(shardCache.keys().next().value);try{return await p;}catch(e){shardCache.delete(i);throw e;}}
+export async function loadPackedAsset(key){const m=await manifest(),e=m.entries[key];if(!e||e.offset%4||e.length%4||e.offset+e.length>m.shardSizes[e.shard])throw Error('空间资源索引无效：'+key);const b=await shard(e.shard,m.shardSizes[e.shard]);return {meta:e.meta,data:new Float32Array(b.slice(e.offset,e.offset+e.length))};}

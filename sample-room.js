@@ -1,3 +1,4 @@
+import {loadPackedAsset} from './packed-assets.js';
 export const ROOM_PRESETS=[
  {id:'enveloping',stem:'surrey-enveloping',name:'Surrey · 包围',seconds:.5},
  {id:'wet',stem:'surrey-wet',name:'Surrey · 湿润',seconds:.5},
@@ -14,9 +15,7 @@ export async function loadSampleRoom(id=DEFAULT_ROOM,rate=48000){
  const preset=ROOM_PRESETS.find(p=>p.id===id);if(!preset)throw Error('未知采样混响');
  const key=id+':'+rate;if(cache.has(key))return cache.get(key);
  const promise=(async()=>{
-  const [mr,ir]=await Promise.all([fetch(`./sofa-data/room/${preset.stem}.json`),fetch(`./sofa-data/room/${preset.stem}.f32`)]);
-  if(!mr.ok||!ir.ok)throw Error('采样混响加载失败：'+preset.name);
-  const meta=await mr.json(),raw=new Float32Array(await ir.arrayBuffer());
+  const {meta,data:raw}=await loadPackedAsset('room/'+preset.stem);
   if(raw.length!==meta.channels.length*2*meta.length||!raw.every(Number.isFinite))throw Error('采样混响数据损坏');
   // Fixed ±30° room sends retain the stereo input; direct sound follows the object.
   const directions=[30,-30].map(az=>meta.channels.reduce((best,c,i)=>Math.cos((c.position[0]-az)*Math.PI/180)*Math.cos(c.position[1]*Math.PI/180)>best.score?{index:i,score:Math.cos((c.position[0]-az)*Math.PI/180)*Math.cos(c.position[1]*Math.PI/180)}:best,{index:0,score:-Infinity}).index);
@@ -32,4 +31,4 @@ export async function loadSampleRoom(id=DEFAULT_ROOM,rate=48000){
 export function sampleRoomBuffers(ctx,data,tail=1){
  return data.pairs.map(pair=>{const n=Math.max(1,Math.round(pair[0].length*tail)),b=ctx.createBuffer(2,n,data.rate),fade=Math.min(n,Math.round(data.rate*.05));for(let ear=0;ear<2;ear++){const a=b.getChannelData(ear);a.set(pair[ear].subarray(0,n));if(tail<1)for(let i=n-fade;i<n;i++)a[i]*=.5+.5*Math.cos(Math.PI*(i-(n-fade))/fade);}return b;});
 }
-export function sampleRoomMetadata(data,room){return {type:'measured wet-only binaural convolution',preset:data.id,name:data.name,sourceRate:data.sourceRate,renderRate:data.rate,source:data.source,license:data.license,attribution:'sofa-data/room/ATTRIBUTION.txt',processing:data.processing,sourceDirections:data.sourceDirections,routing:'fixed room sends; object motion applied to direct HRIR path',sampleSupportSeconds:data.seconds,retainedSeconds:data.seconds*(room.tail??1),tailRetention:room.tail??1,normalize:false};}
+export function sampleRoomMetadata(data,room){return {type:'measured wet-only binaural convolution',preset:data.id,name:data.name,sourceRate:data.sourceRate,renderRate:data.rate,source:data.source,license:data.license,attribution:'ROOM-ATTRIBUTION.txt',processing:data.processing,sourceDirections:data.sourceDirections,routing:'fixed room sends; object motion applied to direct HRIR path',sampleSupportSeconds:data.seconds,retainedSeconds:data.seconds*(room.tail??1),tailRetention:room.tail??1,normalize:false};}

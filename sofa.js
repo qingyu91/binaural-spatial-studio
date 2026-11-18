@@ -1,10 +1,12 @@
+import {loadPackedAsset} from './packed-assets.js';
 export const DEFAULT_SOFA='p0150';
 const rawCache=new Map(),rateCache=new Map(),modules=new WeakMap();
-export async function listSofas(){const r=await fetch('./sofa-data/index.json');if(!r.ok)throw Error('SOFA 列表加载失败');return r.json();}
+export async function listSofas(){const r=await fetch('./sofa-index.json');if(!r.ok)throw Error('SOFA 列表加载失败');return r.json();}
 async function rawSofa(id){
+ if(id!==DEFAULT_SOFA)throw Error('网页版仅提供 p0150');
  if(!/^p\d{4}$/.test(id))throw Error('SOFA 编号无效');
  if(rawCache.has(id))return rawCache.get(id);
- const promise=(async()=>{const mr=await fetch(`./sofa-data/${id}.json`);if(!mr.ok)throw Error('找不到 SOFA '+id);const meta=await mr.json();const rr=await fetch(`./sofa-data/${id}.hrir.f32`);if(!rr.ok)throw Error('SOFA 响应加载失败');const data=new Float32Array(await rr.arrayBuffer());if(data.length!==meta.numMeasurements*2*meta.irLength||!data.every(Number.isFinite))throw Error('SOFA 数据无效');return {meta,data};})();
+ const promise=(async()=>{const {meta,data}=await loadPackedAsset(id);if(data.length!==meta.numMeasurements*2*meta.irLength||!data.every(Number.isFinite))throw Error('SOFA 数据无效');return {meta,data};})();
  rawCache.set(id,promise);if(rawCache.size>6)rawCache.delete(rawCache.keys().next().value);try{return await promise;}catch(e){rawCache.delete(id);throw e;}
 }
 export async function loadSofa(id,rate){

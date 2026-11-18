@@ -1,0 +1,59 @@
+Francombe, Jon, 2017: IoSR Listening Room Multichannel BRIR dataset, Institute of Sound Recording, University of Surrey, UK. DOI: https://doi.org/10.15126/surreydata.00813511
+Source: https://github.com/IoSR-Surrey/IoSR_ListeningRoom_BRIRs
+License: Creative Commons Attribution 4.0 International https://creativecommons.org/licenses/by/4.0/
+Modified: Direct peak aligned per speaker, common-ear 6–8ms fade-in; 513-tap FIR 250–6500Hz; exp(-t/0.35); last40ms fade; one shared RMS-energy normalization across directions. Not original BRIR.
+
+Additional derived variants: clear applies exp(-t/0.035) and fades out by220ms; enveloping reduces first reflections with a 12–47ms envelope (0.25 to1). Each uses one common scale to match aggregate baseline IR energy. Same CC BY 4.0 source and attribution.
+
+Brahmssaal chamber source: Amengual Gari, Sahin, Eddy and Kob (2020), Open Database of Spatial Room Impulse Responses at Detmold University of Music
+https://doi.org/10.5281/zenodo.4116247
+License: CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+Changes: Brahmssaal C1S1R3 dummy-head audience row3; retain original stereo channels; 8–12ms common gate, 513-tap 200–7000Hz FIR with delay compensated, exp(-t/0.6), 1.2s support last100ms fade, unit total energy. Single measured stage-source position shared by input channels; not a multi-direction BRIR set.
+
+Long-tail variants (2026-09-28): same Detmold database and CC BY 4.0 license above.
+Brahmssaal: SetA_SingleSources/Data/Brahmssaal/DummyHead/C1S1R3.wav.
+Konzerthaus: SetC_DenseKH_LSOrchestra/Data/DummyHead/S1R372.wav; downloaded ZIP member verified by CRC32.
+Modified: wet-only 12–24ms gate; 180–7500Hz FIR; early reflection attenuation gradually released by100ms; shorter LF and HF decay, final150ms fade; common stereo unit-energy normalization. Original stereo preserved, no time stretching. Single measured source/receiver response shared across sources. See JSON metadata and analysis/prepare-long-rooms.py. IR support length is not RT60.
+
+Genesis 6 Studio live room — local audition preset (2026-11-10)
+Attribution: www.openairlib.net; OpenAIR / AudioLab, University of York.
+Stereo derivative published by gleokit: https://gleokit.com/ir
+File: https://gleokit.com/irs/genesis-6-studio.wav
+License declared in publisher's per-file manifest: CC BY 4.0
+https://creativecommons.org/licenses/by/4.0/
+Manifest: https://gleokit.com/irs/manifest.json
+Original descriptive page: https://www.openair.hosted.york.ac.uk/?page_id=483
+Original measurement directory: https://webfiles.york.ac.uk/OPENAIR/IRs/genesis-6-studio-live-room-drum-set/
+The original descriptive page was unavailable when checked; the per-file license declaration is from the stereo derivative publisher, not an independently verified current OpenAIR license page.
+Publisher changes: converted to 48 kHz / 24-bit stereo WAV; silence/tail trimming and short fade-out; peak-normalized to -6 dBFS; B-format stereo decode L=W+0.7071*Y, R=W-0.7071*Y (FuMa ordering).
+Local changes: common-ear direct-peak alignment; 6–8 ms wet gate; last20ms fade; one common stereo energy scale. No additional EQ, time stretching, or synthetic tail. Approximate direct-sound suppression, not an exact reflection separation. Not a measured binaural response or four-channel true-stereo matrix.
+Source WAV SHA256: bcf551553a3c26c9c66b38199f18937cc218fd7d6ec8721f8a68e42d60cf6ecc
+Preparation and source manifest: analysis/prepare-genesis-studio.py and analysis/genesis-studio-source/.
+
+Additional measured studio selections (2026-11-10)
+
+WDR: Philipp Stade, Benjamin Bernschütz, Maximilian Rühl (2012).
+"A Spatial Audio Impulse Response Compilation Captured at the WDR Broadcast Studios."
+Cologne University of Applied Sciences / WDR.
+Official source and license: https://audiogroup.web.th-koeln.de/wdr_irc.html
+Archive: https://audiogroup.web.th-koeln.de/FILES/WDR_MIC.zip
+Originals AND these modified WDR IR assets are offered under CC BY-SA 3.0:
+https://creativecommons.org/licenses/by-sa/3.0/
+This attribution/license concerns the WDR IR assets, not a relicensing of unrelated application code.
+Selected files (ZIP CRC32 checked):
+CHS_MIC_ORTF_MK4-SBC.wav; CHS_MIC_XY_MK4-SBC.wav;
+CHL_MIC_ORTF_MK4-SBC.wav; CHL_MIC_SmallAB_MK2-SBC.wav;
+CR1_MIC_SmallAB_MK2-L.wav; CR7_MIC_ORTF_MK4-L.wav.
+CHS/CHL archive groups are displayed as WDR small/large broadcast studios (SBS/LBS in publication).
+CR1/CR7 are separately labelled control rooms. L indicates a left studio-monitor source, not a mono left output channel. SBC is the central SonicBall source. ORTF/XY/AB are microphone configurations, not different physical studios.
+
+Genesis 6 additional measurements: OpenAIR / AudioLab, University of York.
+Source: https://webfiles.york.ac.uk/OPENAIR/IRs/genesis-6-studio-live-room-drum-set/b-format/
+kick_ir.wav, snare_ir.wav, ride_ir.wav (96kHz, 24-bit, four-channel SoundField B-format).
+Recording details: ../Read%20Me.txt in the source dataset's parent directory.
+The gleokit manifest declares CC BY 4.0 for its separate stereo derivative. This does not establish licensing of these three original B-format measurements. The original OpenAIR license page remains unavailable; these selections are retained for local audition pending verification of the original measurement license.
+Decode: legacy SoundField WXYZ convention, L=W+0.70710678Y; R=W-0.70710678Y. These are stereo derivatives, not measured binaural or true-stereo matrices.
+
+Processing applied to each additional selection:
+Resample to48kHz when needed; common L/R time origin; suppress direct-area samples with a6–8ms half-cosine gate; fade last20ms; one common gain for unit combined stereo IR energy. No artificial decay extension, no time stretching, no extra EQ, no independent ear level/time correction. Direct/reflection separation is approximate. Equal IR energy does not guarantee equal perceived loudness.
+Per-file original SHA256, processed SHA256, gain, time origin, source and license are recorded in each studio-*-wet-v1.json. Generation: analysis/prepare-studio-options.py. Original WAVs and processed audition WAVs are retained under analysis/studio-irs-source/.
