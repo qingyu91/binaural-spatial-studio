@@ -1,0 +1,8 @@
+AXD / SONICOM HRTF data — Imperial College London
+Source: https://sofacoustics.org/data/database/axd/
+License: Creative Commons Attribution-ShareAlike 3.0 Unported
+https://creativecommons.org/licenses/by-sa/3.0/
+140 subjects: p0001–p0040 and p0101–p0200. Default: p0150.
+Modified: SOFA impulse responses converted to float32 little-endian HRIR files; measurement positions and sample-rate metadata extracted as JSON. In-browser rendering resamples responses when required and applies a common energy gain. These derived HRTF data retain the same CC BY-SA 3.0 license. No endorsement by the original data authors is implied.
+
+Measured room impulse-response sources and modifications: see sofa-data/room/ATTRIBUTION.txt (CC BY 4.0).
